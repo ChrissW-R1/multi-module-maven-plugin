@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 @Mojo(
 	name = "module-root-properties",
-	defaultPhase = LifecyclePhase.INITIALIZE,
+	defaultPhase = LifecyclePhase.VALIDATE,
 	threadSafe = true
 )
 @Keep
