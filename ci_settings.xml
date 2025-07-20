@@ -10,7 +10,7 @@
 		</server>
 		<server>
 			<id>project-repo</id>
-			<username>${env.ci_git_user}</username>
+			<username>${env.GITHUB_ACTOR}</username>
 			<password>${env.GITHUB_TOKEN}</password>
 		</server>
 		<server>
