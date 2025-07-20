@@ -37,7 +37,7 @@
 	</properties>
 
 	<scm>
-		<url>https://gitlab.com/${project.organization.name}/${project.module-root.artifactId}</url>
+		<url>https://github.com/${project.organization.name}/${project.module-root.artifactId}</url>
 		<connection>scm:git:${project.scm.url}.git</connection>
 		<developerConnection>${project.scm.connection}</developerConnection>
 		<tag>HEAD</tag>
