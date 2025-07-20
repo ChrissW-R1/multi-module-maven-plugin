@@ -160,12 +160,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-source-plugin</artifactId>
-						<configuration>
-							<attach>false</attach>
-						</configuration>
-					</plugin>
-					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>
 							<execution>
