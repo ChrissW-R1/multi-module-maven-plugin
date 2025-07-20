@@ -23,14 +23,11 @@ jobs:
             -
                 name: Git Checkout
                 uses: actions/checkout@v4
-                with:
-                    persist-credentials: false
             -
                 name: Setup git user
                 run:  |
                       git config --global user.name "ChrissW-R1"
                       git config --global user.email "contact@ChrissW-R1.me"
-                      git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
             -
                 name: Setup JDK 11
                 uses: actions/setup-java@v4
@@ -47,7 +44,6 @@ jobs:
                 run:  mvn -B clean release:prepare release:perform -Dexecutable -DfullBuild -s ci_settings.xml --file pom.xml -Dusername=${ci_git_user} -Dpassword=${GITHUB_TOKEN}
                 env:
                     GITHUB_TOKEN:             ${{ secrets.GITHUB_TOKEN }}
-                    DEPLOY_TOKEN:             ${{ secrets.DEPLOY_TOKEN }}
                     ci_git_user:              ${{ env.CI_GIT_USER }}
                     nvd_api_key:              ${{ secrets.NVD_API_KEY }}
                     gpg_key:                  ${{ secrets.GPG_PRIVATE_KEY }}
