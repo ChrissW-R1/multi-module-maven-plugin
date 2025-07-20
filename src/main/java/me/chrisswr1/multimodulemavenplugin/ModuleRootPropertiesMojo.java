@@ -37,6 +37,7 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 
 		final @Nullable String rootArtifactId = topProject.getArtifactId();
 		final @NotNull Path topDir = topProject.getBasedir().toPath();
+		final @NotNull String rootPath = topDir.toString();
 		final @NotNull Path currentDir = session.getCurrentProject().getBasedir().toPath();
 		@NotNull String relativePath = currentDir.relativize(topDir).toString();
 		if (relativePath.isEmpty()) {
@@ -48,6 +49,9 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 
 		getLog().info("Setting project.module-root.artifactId = " + rootArtifactId);
 		session.getUserProperties().setProperty("project.module-root.artifactId", rootArtifactId);
+
+		getLog().info("Setting project.module-root.basedir = " + rootPath);
+		session.getUserProperties().setProperty("project.module-root.basedir", rootPath);
 
 		getLog().info("Setting project.module-root.relativedir = " + relativePath);
 		session.getUserProperties().setProperty("project.module-root.relativedir", relativePath);
