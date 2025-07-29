@@ -3,7 +3,6 @@ package me.chrisswr1.multimodulemavenplugin;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Repository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -16,6 +15,8 @@ import proguard.annotation.Keep;
 import proguard.annotation.KeepName;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mojo(
 	name = "module-root-properties",
@@ -40,13 +41,7 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 	)
 	@Getter
 	@KeepName
-	private boolean resolveUrl;
-	@Parameter(
-		defaultValue = "false"
-	)
-	@Getter
-	@KeepName
-	private boolean resolveRepositories;
+	private boolean resolve;
 
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -103,34 +98,31 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 			relativePath
 		);
 
-		final @Nullable MavenProject project = session.getCurrentProject();
-		if (project == null) {
-			throw new MojoExecutionException(
-				"Couldn't determine current project!"
+		if (this.isResolve()) {
+			final @NotNull Map<String, String> rootProperties = new HashMap<>();
+			rootProperties.put(
+				"project.module-root.artifactId",
+				rootArtifactId
 			);
-		}
-		final @NotNull PropertyProcessor propertyProcessor =
-			new PropertyProcessor(session);
+			rootProperties.put(
+				"project.module-root.basedir",
+				rootPath
+			);
+			rootProperties.put(
+				"project.module-root.relativedir",
+				relativePath
+			);
 
-		if (this.isResolveUrl()) {
-			final @Nullable String url = project.getUrl();
-
-			project.setUrl(propertyProcessor.resolveString(url));
-		}
-
-		if (this.isResolveRepositories()) {
-			for (
-				final @Nullable Repository repository :
-				project.getRepositories()
-			) {
-				if (repository == null) {
-					continue;
-				}
-
-				final @Nullable String url = repository.getUrl();
-
-				repository.setUrl(propertyProcessor.resolveString(url));
+			final @Nullable MavenProject project = session.getCurrentProject();
+			if (project == null) {
+				throw new MojoExecutionException(
+					"Couldn't determine current project!"
+				);
 			}
+			final @NotNull PropertyProcessor propertyProcessor =
+				new PropertyProcessor(rootProperties);
+
+			propertyProcessor.resolveObject(project);
 		}
 	}
 }

@@ -2,15 +2,15 @@ package me.chrisswr1.multimodulemavenplugin;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.InterpolationException;
-import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
-import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
+import org.codehaus.plexus.interpolation.MapBasedValueSource;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.*;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Map;
 
 public class PropertyProcessor {
 	@SuppressFBWarnings(
@@ -21,39 +21,19 @@ public class PropertyProcessor {
 	private final StringSearchInterpolator stringInterpolator;
 
 	public PropertyProcessor(
-		final @Nullable MavenSession session
+		final @Nullable Map<? extends String, ? extends String> properties
 	) {
+		final @NotNull Map<? extends String, ? extends String> propertiesMap =
+			properties != null ?
+			properties :
+			Map.of();
+
 		final @NotNull StringSearchInterpolator stringInterpolator =
 			new StringSearchInterpolator();
 
-		if (session != null) {
-			final @Nullable MavenProject project = session.getCurrentProject();
-			if (project != null) {
-				stringInterpolator.addValueSource(
-					new PropertiesBasedValueSource(project.getProperties())
-				);
-				stringInterpolator.addValueSource(
-					new PrefixedObjectValueSource("project", project)
-				);
-				stringInterpolator.addValueSource(
-					new PrefixedObjectValueSource("pom", project)
-				);
-			}
-
-			stringInterpolator.addValueSource(
-				new PropertiesBasedValueSource(session.getUserProperties())
-			);
-			stringInterpolator.addValueSource(
-				new PropertiesBasedValueSource(session.getSystemProperties())
-			);
-		}
-
-		try {
-			stringInterpolator.addValueSource(
-				new PropertiesBasedValueSource(System.getProperties())
-			);
-		} catch (final @NotNull SecurityException ignored) {
-		}
+		stringInterpolator.addValueSource(new MapBasedValueSource(
+			propertiesMap
+		));
 
 		this.stringInterpolator = stringInterpolator;
 	}
@@ -69,6 +49,43 @@ public class PropertyProcessor {
 			return this.getStringInterpolator().interpolate(text);
 		} catch (final InterpolationException e) {
 			return text;
+		}
+	}
+
+	public <T> void resolveObject(
+		final @Nullable T object
+	) {
+		if (object == null) {
+			return;
+		}
+
+		Class<?> clazz = object.getClass();
+		while (clazz != null && clazz != Object.class) {
+			for (Field field : clazz.getDeclaredFields()) {
+				field.setAccessible(true);
+
+				try {
+					Object value = field.get(object);
+					if (value instanceof String) {
+						field.set(object, this.resolveString((String)value));
+					} else if (value instanceof Collection<?>) {
+						for (Object item : (Collection<?>)value) {
+							this.resolveObject(item);
+						}
+					} else if (value instanceof Map<?, ?>) {
+						for (
+							Map.Entry<?, ?> entry :
+							((Map<?, ?>)value).entrySet()
+						) {
+							this.resolveObject(entry.getKey());
+							this.resolveObject(entry.getValue());
+						}
+					}
+				} catch (final @NotNull IllegalAccessException ignored) {
+				}
+			}
+
+			clazz = clazz.getSuperclass();
 		}
 	}
 }
