@@ -1,5 +1,6 @@
 package me.chrisswr1.multimodulemavenplugin;
 
+import lombok.Getter;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -25,20 +26,30 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 		defaultValue = "${session}",
 		readonly = true
 	)
+	@Getter
 	@KeepName
-	private MavenSession session;
+	private @Nullable MavenSession session;
 
 	@Override
 	public void execute() throws MojoExecutionException {
+		final @Nullable MavenSession session = this.getSession();
+		if (session == null) {
+			throw new MojoExecutionException(
+				"Couldn't determine Maven session!"
+			);
+		}
 		final @Nullable MavenProject topProject = session.getTopLevelProject();
 		if (topProject == null) {
-			throw new MojoExecutionException("Couldn't determine top level project!");
+			throw new MojoExecutionException(
+				"Couldn't determine top level project!"
+			);
 		}
 
 		final @Nullable String rootArtifactId = topProject.getArtifactId();
 		final @NotNull Path topDir = topProject.getBasedir().toPath();
 		final @NotNull String rootPath = topDir.toString();
-		final @NotNull Path currentDir = session.getCurrentProject().getBasedir().toPath();
+		final @NotNull Path currentDir =
+			session.getCurrentProject().getBasedir().toPath();
 		@NotNull String relativePath = currentDir.relativize(topDir).toString();
 		if (relativePath.isEmpty()) {
 			relativePath = ".";
@@ -47,13 +58,31 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 			relativePath = relativePath + '/';
 		}
 
-		getLog().info("Setting project.module-root.artifactId = " + rootArtifactId);
-		session.getUserProperties().setProperty("project.module-root.artifactId", rootArtifactId);
+		this.getLog().info(
+			"Setting project.module-root.artifactId = " +
+			rootArtifactId
+		);
+		session.getUserProperties().setProperty(
+			"project.module-root.artifactId",
+			rootArtifactId
+		);
 
-		getLog().info("Setting project.module-root.basedir = " + rootPath);
-		session.getUserProperties().setProperty("project.module-root.basedir", rootPath);
+		this.getLog().info(
+			"Setting project.module-root.basedir = " +
+			rootPath
+		);
+		session.getUserProperties().setProperty(
+			"project.module-root.basedir",
+			rootPath
+		);
 
-		getLog().info("Setting project.module-root.relativedir = " + relativePath);
-		session.getUserProperties().setProperty("project.module-root.relativedir", relativePath);
+		this.getLog().info(
+			"Setting project.module-root.relativedir = " +
+			relativePath
+		);
+		session.getUserProperties().setProperty(
+			"project.module-root.relativedir",
+			relativePath
+		);
 	}
 }
