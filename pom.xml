@@ -58,6 +58,7 @@
 
 		<!-- dependency versions -->
 		<maven.version>3.9.11</maven.version>
+		<plexus.version>1.28</plexus.version>
 
 		<!-- plugin versions -->
 		<plugin.plugin.version>3.15.1</plugin.plugin.version>
@@ -104,6 +105,13 @@
 			<artifactId>maven-plugin-annotations</artifactId>
 			<version>${plugin.plugin.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<!-- default dependencies -->
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-interpolation</artifactId>
+			<version>${plexus.version}</version>
 		</dependency>
 	</dependencies>
 
