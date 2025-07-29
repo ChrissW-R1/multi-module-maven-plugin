@@ -131,6 +131,19 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 
 				repository.setUrl(propertyProcessor.resolveString(url));
 			}
+
+			for (
+				final @Nullable Repository repository :
+				project.getPluginRepositories()
+			) {
+				if (repository == null) {
+					continue;
+				}
+
+				final @Nullable String url = repository.getUrl();
+
+				repository.setUrl(propertyProcessor.resolveString(url));
+			}
 		}
 	}
 }
