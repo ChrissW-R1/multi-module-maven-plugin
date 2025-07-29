@@ -34,6 +34,12 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 	@Getter
 	@KeepName
 	private @Nullable MavenSession session;
+	@Parameter(
+		defaultValue = "false"
+	)
+	@Getter
+	@KeepName
+	private boolean resolveUrl;
 
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -89,5 +95,20 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 			"project.module-root.relativedir",
 			relativePath
 		);
+
+		if (this.isResolveUrl()) {
+			final @Nullable MavenProject project = session.getCurrentProject();
+			if (project == null) {
+				throw new MojoExecutionException(
+					"Couldn't determine current project!"
+				);
+			}
+
+			final @Nullable String url = project.getUrl();
+			final @NotNull PropertyProcessor propertyProcessor =
+				new PropertyProcessor(session);
+
+			project.setUrl(propertyProcessor.resolveString(url));
+		}
 	}
 }
