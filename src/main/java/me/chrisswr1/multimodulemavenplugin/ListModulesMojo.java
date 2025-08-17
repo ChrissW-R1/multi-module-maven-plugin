@@ -96,9 +96,12 @@ extends AbstractMojo {
 				try {
 					final @NotNull Path modulePath =
 						project.getBasedir().toPath().toRealPath();
-					projectPaths.add(
-						rootPath.relativize(modulePath).toString()
-					);
+					final @NotNull String relPath = rootPath.relativize(
+						modulePath
+					).toString().trim();
+					if (!(relPath.isEmpty())) {
+						projectPaths.add(relPath);
+					}
 				} catch (IOException e) {
 					this.getLog().error(
 						"Could not relativize project path! " +
