@@ -102,7 +102,7 @@ extends AbstractMojo {
 					if (!(relPath.isEmpty())) {
 						projectPaths.add(relPath);
 					}
-				} catch (IOException e) {
+				} catch (final @NotNull IOException e) {
 					this.getLog().error(
 						"Could not relativize project path! " +
 						"Project: " + project.getArtifactId(),
