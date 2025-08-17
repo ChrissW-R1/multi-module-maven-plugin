@@ -17,9 +17,9 @@ import proguard.annotation.KeepName;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mojo(
 	name = "list-modules",
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 )
 @Keep
 public class ListModulesMojo
-	extends AbstractMojo {
+extends AbstractMojo {
 	@Parameter(
 		defaultValue = "${session}",
 		readonly = true
@@ -76,6 +76,7 @@ public class ListModulesMojo
 				);
 			}
 		}
+
 		try {
 			if ((!(file.exists())) && (!(file.createNewFile()))) {
 				throw new IOException(
@@ -83,21 +84,31 @@ public class ListModulesMojo
 					file.getAbsolutePath()
 				);
 			}
-		} catch (final @NotNull IOException e) {
-			throw new MojoExecutionException(
-				"Output file could not be created: " + file.getAbsolutePath(),
-				e
-			);
-		}
 
-		final @NotNull List<MavenProject> projects = new ArrayList<>(
-			session.getProjects()
-		);
-		final @NotNull List<String> projectNames = projects.stream().map(
-			MavenProject::getName
-		).collect(Collectors.toList());
-		try {
-			Files.write(file.toPath(), projectNames);
+			final @NotNull Path rootPath =
+				topProject.getBasedir().toPath().toRealPath();
+			final @NotNull List<MavenProject> projects = new ArrayList<>(
+				session.getProjects()
+			);
+
+			final @NotNull List<String> projectPaths = new ArrayList<>();
+			for (MavenProject project : projects) {
+				try {
+					final @NotNull Path modulePath =
+						project.getBasedir().toPath().toRealPath();
+					projectPaths.add(
+						rootPath.relativize(modulePath).toString()
+					);
+				} catch (IOException e) {
+					this.getLog().error(
+						"Could not relativize project path! " +
+						"Project: " + project.getArtifactId(),
+						e
+					);
+				}
+			}
+
+			Files.write(file.toPath(), projectPaths);
 		} catch (final @NotNull IOException e) {
 			throw new MojoExecutionException(
 				"Couldn't write project files to output file!",
