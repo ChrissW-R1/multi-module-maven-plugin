@@ -23,7 +23,8 @@ import java.nio.file.Path;
 	threadSafe = true
 )
 @Keep
-public class ModuleRootPropertiesMojo extends AbstractMojo {
+public class ModuleRootPropertiesMojo
+extends AbstractMojo {
 	@Parameter(
 		defaultValue = "${session}",
 		readonly = true
@@ -40,13 +41,13 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 	)
 	@Getter
 	@KeepName
-	private boolean resolveUrl;
+	private           boolean      resolveUrl;
 	@Parameter(
 		defaultValue = "false"
 	)
 	@Getter
 	@KeepName
-	private boolean resolveRepositories;
+	private           boolean      resolveRepositories;
 
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -64,6 +65,7 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 		}
 
 		final @Nullable String rootArtifactId = topProject.getArtifactId();
+		final @Nullable String rootName       = topProject.getName();
 		final @NotNull Path topDir = topProject.getBasedir().toPath();
 		final @NotNull String rootPath = topDir.toString();
 		final @NotNull Path currentDir =
@@ -83,6 +85,15 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 		session.getUserProperties().setProperty(
 			"project.module-root.artifactId",
 			rootArtifactId
+		);
+
+		this.getLog().info(
+			"Setting project.module-root.name = " +
+			rootName
+		);
+		session.getUserProperties().setProperty(
+			"project.module-root.name",
+			rootName
 		);
 
 		this.getLog().info(
