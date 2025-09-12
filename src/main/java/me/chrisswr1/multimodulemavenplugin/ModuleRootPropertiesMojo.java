@@ -23,7 +23,8 @@ import java.nio.file.Path;
 	threadSafe = true
 )
 @Keep
-public class ModuleRootPropertiesMojo extends AbstractMojo {
+public class ModuleRootPropertiesMojo
+extends AbstractMojo {
 	@Parameter(
 		defaultValue = "${session}",
 		readonly = true
@@ -40,16 +41,17 @@ public class ModuleRootPropertiesMojo extends AbstractMojo {
 	)
 	@Getter
 	@KeepName
-	private boolean resolveUrl;
+	private           boolean      resolveUrl;
 	@Parameter(
 		defaultValue = "false"
 	)
 	@Getter
 	@KeepName
-	private boolean resolveRepositories;
+	private           boolean      resolveRepositories;
 
 	@Override
-	public void execute() throws MojoExecutionException {
+	public void execute()
+	throws MojoExecutionException {
 		final @Nullable MavenSession session = this.getSession();
 		if (session == null) {
 			throw new MojoExecutionException(
