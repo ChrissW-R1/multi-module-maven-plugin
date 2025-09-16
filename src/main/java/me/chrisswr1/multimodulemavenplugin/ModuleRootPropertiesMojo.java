@@ -66,6 +66,7 @@ extends AbstractMojo {
 		}
 
 		final @Nullable String rootArtifactId = topProject.getArtifactId();
+		final @Nullable String rootName       = topProject.getName();
 		final @NotNull Path topDir = topProject.getBasedir().toPath();
 		final @NotNull String rootPath = topDir.toString();
 		final @NotNull Path currentDir =
@@ -85,6 +86,15 @@ extends AbstractMojo {
 		session.getUserProperties().setProperty(
 			"project.module-root.artifactId",
 			rootArtifactId
+		);
+
+		this.getLog().info(
+			"Setting project.module-root.name = " +
+			rootName
+		);
+		session.getUserProperties().setProperty(
+			"project.module-root.name",
+			rootName
 		);
 
 		this.getLog().info(

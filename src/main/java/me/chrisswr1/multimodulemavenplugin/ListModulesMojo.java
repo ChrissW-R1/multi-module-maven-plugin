@@ -48,8 +48,8 @@ extends AbstractMojo {
 	private @Nullable File         file;
 
 	@Override
-	public void execute()
-	throws MojoExecutionException {
+	public void execute(
+	) throws MojoExecutionException {
 		final @Nullable MavenSession session = this.getSession();
 		if (session == null) {
 			throw new MojoExecutionException(
@@ -91,6 +91,7 @@ extends AbstractMojo {
 				session.getProjects()
 			);
 
+			this.getLog().info("Found modules path:");
 			final @NotNull List<String> projectPaths = new ArrayList<>();
 			for (MavenProject project : projects) {
 				try {
@@ -100,6 +101,7 @@ extends AbstractMojo {
 						modulePath
 					).toString().trim();
 					if (!(relPath.isEmpty())) {
+						this.getLog().info(relPath);
 						projectPaths.add(relPath);
 					}
 				} catch (final @NotNull IOException e) {
@@ -110,8 +112,14 @@ extends AbstractMojo {
 					);
 				}
 			}
+			this.getLog().info("-------------------");
+			this.getLog().info(
+				"Total: " + projectPaths.size() + " modules"
+			);
 
-			Files.write(file.toPath(), projectPaths);
+			final @NotNull Path filePath = file.toPath();
+			this.getLog().info("List modules in file: " + filePath);
+			Files.write(filePath, projectPaths);
 		} catch (final @NotNull IOException e) {
 			throw new MojoExecutionException(
 				"Couldn't write project files to output file!",
