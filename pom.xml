@@ -35,9 +35,7 @@
 				<role>developer</role>
 			</roles>
 			<properties>
-				<picUrl>
-					https://gravatar.com/avatar/625826a28e0cb12855ef6f5d169f8b67
-				</picUrl>
+				<picUrl>https://gravatar.com/avatar/625826a28e0cb12855ef6f5d169f8b67</picUrl>
 			</properties>
 		</developer>
 	</developers>
