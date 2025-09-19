@@ -22,7 +22,7 @@
 	</description>
 	<inceptionYear>2025</inceptionYear>
 
-	<developers>
+	<!--developers>
 		<developer>
 			<id>ChrissW-R1</id>
 			<name>ChrissW-R1</name>
@@ -40,10 +40,11 @@
 				</picUrl>
 			</properties>
 		</developer>
-	</developers>
+	</developers-->
 
 	<properties>
 		<!-- technically-based properties -->
+		<project.module-root.relativedir>./</project.module-root.relativedir>
 		<mainClass.localPath>ModuleRootPropertiesMojo</mainClass.localPath>
 
 		<!-- dependency versions -->
