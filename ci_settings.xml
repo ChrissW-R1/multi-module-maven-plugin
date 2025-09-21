@@ -23,6 +23,11 @@
 			<passphrase>${env.gpg_passphrase}</passphrase>
 		</server>
 		<server>
+			<id>ossindex</id>
+			<username>${env.ossindex_user}</username>
+			<password>${env.ossindex_api_key}</password>
+		</server>
+		<server>
 			<id>nvd.apikey</id>
 			<password>${env.nvd_api_key}</password>
 		</server>
