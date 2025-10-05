@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>me.chrissw-r1</groupId>
 		<artifactId>maven-plugin-parent</artifactId>
-		<version>3.0.26</version>
+		<version>3.0.27</version>
 	</parent>
 
 	<!-- project identifier -->
@@ -29,7 +29,7 @@
 		<mainClass.localPath>ModuleRootPropertiesMojo</mainClass.localPath>
 
 		<!-- dependency versions -->
-		<plexus.version>1.28</plexus.version>
+		<plexus-interpolation.version>1.28</plexus-interpolation.version>
 	</properties>
 
 	<dependencies>
@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-interpolation</artifactId>
-			<version>${plexus.version}</version>
+			<version>${plexus-interpolation.version}</version>
 		</dependency>
 	</dependencies>
 
