@@ -27,7 +27,7 @@
 		<mainClass.localPath>ModuleRootPropertiesMojo</mainClass.localPath>
 
 		<!-- dependency versions -->
-		<plexus-interpolation.version>1.28</plexus-interpolation.version>
+		<plexus-interpolation.version>1.29</plexus-interpolation.version>
 	</properties>
 
 	<dependencies>
