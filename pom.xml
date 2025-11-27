@@ -61,7 +61,7 @@
 		<plexus.version>1.28</plexus.version>
 
 		<!-- plugin versions -->
-		<plugin.plugin.version>3.15.1</plugin.plugin.version>
+		<plugin.plugin.version>3.15.2</plugin.plugin.version>
 	</properties>
 
 	<scm>
