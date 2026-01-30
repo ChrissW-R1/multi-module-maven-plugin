@@ -32,12 +32,20 @@
 		<plexus-interpolation.version>1.29</plexus-interpolation.version>
 	</properties>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.codehaus.plexus</groupId>
+				<artifactId>plexus-interpolation</artifactId>
+				<version>${plexus-interpolation.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<!-- default dependencies -->
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-interpolation</artifactId>
-			<version>${plexus-interpolation.version}</version>
 		</dependency>
 	</dependencies>
 
