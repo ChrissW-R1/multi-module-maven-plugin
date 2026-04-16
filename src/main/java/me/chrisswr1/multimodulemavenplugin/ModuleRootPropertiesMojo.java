@@ -98,15 +98,6 @@ extends AbstractMojo {
 		);
 
 		this.getLog().info(
-			"Setting project.module-root.basedir = " +
-			rootPath
-		);
-		session.getUserProperties().setProperty(
-			"project.module-root.basedir",
-			rootPath
-		);
-
-		this.getLog().info(
 			"Setting project.module-root.relativedir = " +
 			relativePath
 		);
