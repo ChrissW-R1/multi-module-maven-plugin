@@ -59,7 +59,7 @@
 		<mainClass.localPath>ModuleRootPropertiesMojo</mainClass.localPath>
 
 		<!-- dependency versions -->
-		<maven.version>3.9.15</maven.version>
+		<maven.version>3.9.16</maven.version>
 		<plexus.version>1.28</plexus.version>
 
 		<!-- plugin versions -->
